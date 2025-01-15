@@ -1,0 +1,3 @@
+ultralytics
+# OpenCV
+opencv-python-headless
