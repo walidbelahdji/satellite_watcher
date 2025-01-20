@@ -1,3 +1,5 @@
 ultralytics
 # OpenCV
 opencv-python-headless
+# Web framework
+fastapi[all]
