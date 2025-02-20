@@ -3,3 +3,5 @@ dep:
 
 local:
     python3 local.py
+dev:
+    uvicorn serve:app --reload
