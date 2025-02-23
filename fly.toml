@@ -1,0 +1,26 @@
+app = "sky-watcher"
+primary_region = "cdg"
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
+
+[[http_service.checks]]
+grace_period = "10s"
+interval = "30s"
+method = "GET"
+timeout = "5s"
+path = "/health"
+
+[metrics]
+port = 9090
+path = "/metrics"
+
+[env]
+TILE_ENDPOINT = "https://wxs.ign.fr/ortho/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
+TILE_ZOOM = "18"
+MAX_SEARCH_TILES = "50"
