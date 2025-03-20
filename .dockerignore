@@ -1,0 +1,10 @@
+**\__pycache__
+.ruff_cache
+.github
+.git
+README.md
+fly.toml
+*.pt
+*.toml
+*.png
+*.onnx
