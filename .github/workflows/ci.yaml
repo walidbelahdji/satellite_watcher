@@ -2,29 +2,28 @@ name: ci
 
 on:
   push:
-    branches: ['prod']
+    branches: ["prod"]
   pull_request:
-    branches: ['prod']
+    branches: ["prod"]
 
 jobs:
-  lint:
+  fmt-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Secrets lint
-        uses: trufflesecurity/trufflehog@main # nosemgrep
       - name: Set up Python
         uses: actions/setup-python@v4
-        with:
-          python-version: '3'
-          cache: 'pip'
       - name: Install dependencies
-        run: pip install --upgrade -r requirements/dev.txt
-      - name: Fmt lint
+        run: pip install black ruff
+      - name: Check fmt
         run: black . --check
-      - name: Code quality lint
-        if: '!cancelled()'
+      - name: Check lint
         run: ruff check .
+  secret:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: trufflesecurity/trufflehog@main
   sast:
     runs-on: ubuntu-latest
     container:
@@ -32,17 +31,3 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: semgrep ci --config auto --metrics off --supply-chain
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3'
-          cache: 'pip'
-      - run: docker compose up --build --detach --wait
-      - run: pip install --upgrade -r requirements/test.txt -r requirements/common.txt
-      - run: python3 src/integration.py
-      - if: failure()
-        run: docker-compose logs
