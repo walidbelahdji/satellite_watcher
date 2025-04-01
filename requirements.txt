@@ -1,5 +1,10 @@
+# YOLOv8 model
 ultralytics
 # OpenCV
 opencv-python-headless
 # Web framework
 fastapi[all]
+# Python formatter
+black
+# Python linter
+ruff
