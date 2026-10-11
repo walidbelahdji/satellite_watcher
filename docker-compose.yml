@@ -1,3 +1,5 @@
+name: satellite-watcher
+
 services:
   map:
     image: joseluisq/static-web-server
