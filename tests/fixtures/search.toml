@@ -1,0 +1,39 @@
+[[test]]
+name = "Empty body"
+json = "[]"
+status = 422
+result = "{\"detail\": [{\"type\": \"model_attributes_type\", \"loc\": [\"body\"], \"msg\": \"Input should be a valid dictionary or object to extract fields from\", \"input\": []}]}"
+
+[[test]]
+name = "Bound lat"
+json = "{\"start\": {\"lat\": 100, \"lng\": 56}, \"end\": {\"lat\": -43, \"lng\": -56}}"
+status = 422
+result = "{\"detail\": [{\"type\": \"less_than_equal\", \"loc\": [\"body\", \"start\", \"lat\"], \"msg\": \"Input should be less than or equal to 90\", \"input\": 100, \"ctx\": {\"le\": 90.0}}]}"
+
+[[test]]
+name = "Bound lng"
+json = "{\"start\":{\"lat\": 80, \"lng\": -260},\"end\" : {\"lat\": -43, \"lng\": -56}}"
+status = 422
+result = "{\"detail\": [{\"type\": \"greater_than_equal\", \"loc\": [\"body\", \"start\", \"lng\"], \"msg\": \"Input should be greater than or equal to -180\", \"input\": -260, \"ctx\": {\"ge\": -180.0}}]}"
+
+[[test]]
+name = "Huge search"
+json = "{\"start\": {\"lat\": 47.75376, \"lng\": 2.24310}, \"end\":{\"lat\": 48.75623, \"lng\": 2.2468}}"
+status = 413
+result = "{\"detail\": \"Request to search 4392 tiles, max being 500\"}"
+
+[[test]]
+name = "No wastes"
+json = "{\"start\": {\"lat\": 44.05649, \"lng\": 4.85879},\"end\": {\"lat\": 44.05919, \"lng\": 4.86257}}"
+result = "[]"
+
+[[test]]
+name = "With wastes"
+json = "{\"start\": {\"lat\": 48.75376, \"lng\": 2.24310}, \"end\": {\"lat\": 48.75623, \"lng\": 2.2468}}"
+result = "[{\"conf\": 66, \"lat\": 48.75539, \"lng\": 2.24503}, {\"conf\": 88, \"lat\": 48.7554, \"lng\": 2.24548}, {\"conf\": 64, \"lat\": 48.75571, \"lng\": 2.24629}]"
+
+[[test]]
+name = "With wastes and conf"
+json = "{\"start\": {\"lat\": 48.75376, \"lng\": 2.24310}, \"end\": {\"lat\": 48.75623, \"lng\": 2.2468}, \"conf\": 60}"
+result = "[{\"conf\": 66, \"lat\": 48.75539, \"lng\": 2.24503}, {\"conf\": 88, \"lat\": 48.7554, \"lng\": 2.24548}, {\"conf\": 64, \"lat\": 48.75571, \"lng\": 2.24629}]"
+

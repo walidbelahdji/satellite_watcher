@@ -1,0 +1,4 @@
+[[test]]
+name = "Health check"
+result = "\"detectorLitter is running\""
+

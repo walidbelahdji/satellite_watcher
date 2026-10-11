@@ -1,0 +1,18 @@
+app = "detectorlitter-demo"
+primary_region = "cdg"
+
+[build]
+dockerfile = "demo.Dockerfile"
+
+[http_service]
+internal_port = 8501
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+processes = ["app"]
+
+[env]
+TILE_ENDPOINT="https://wxs.ign.fr/ortho/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
+DEMO_TILE_ATTRIBUTION='<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>'
+DEMO_ENDPOINT = "https://detectorlitter.fly.dev"

@@ -1,4 +1,4 @@
-app = "sky-watcher"
+app = "detectorlitter"
 primary_region = "cdg"
 
 [http_service]

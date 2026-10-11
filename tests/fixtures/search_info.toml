@@ -1,0 +1,33 @@
+[[test]]
+name = "Empty body"
+json = "[]"
+status = 422
+result = "{\"detail\": [{\"type\": \"model_attributes_type\", \"loc\": [\"body\"], \"msg\": \"Input should be a valid dictionary or object to extract fields from\", \"input\": []}]}"
+
+[[test]]
+name = "Bound lat"
+json = "[{\"lat\": 100, \"lng\": 56},{\"lat\": -43, \"lng\": -56}]"
+status = 422
+result = "{\"detail\": [{\"type\": \"model_attributes_type\", \"loc\": [\"body\"], \"msg\": \"Input should be a valid dictionary or object to extract fields from\", \"input\": [{\"lat\": 100, \"lng\": 56}, {\"lat\": -43, \"lng\": -56}]}]}"
+
+[[test]]
+name = "Bound lng"
+json = "[{\"lat\": 80, \"lng\": -260},{\"lat\": -43, \"lng\": -56}]"
+status = 422
+result = "{\"detail\": [{\"type\": \"model_attributes_type\", \"loc\": [\"body\"], \"msg\": \"Input should be a valid dictionary or object to extract fields from\", \"input\": [{\"lat\": 80, \"lng\": -260}, {\"lat\": -43, \"lng\": -56}]}]}"
+
+[[test]]
+name = "Huge search"
+json = "{\"start\": {\"lat\": 47.75376, \"lng\": 2.24310}, \"end\":{\"lat\": 48.75623, \"lng\": 2.2468}}"
+result = "{\"nb_tiles\": 4392, \"limit\": 500, \"limited\": true}"
+
+[[test]]
+name = "No wastes"
+json = "{\"start\": {\"lat\": 44.05649, \"lng\": 4.85879},\"end\": {\"lat\": 44.05919, \"lng\": 4.86257}}"
+result = "{\"nb_tiles\": 12, \"limit\": 500, \"limited\": false}"
+
+[[test]]
+name = "With wastes"
+json = "{\"start\": {\"lat\": 48.75376, \"lng\": 2.24310}, \"end\": {\"lat\": 48.75623, \"lng\": 2.2468}}"
+result = "{\"nb_tiles\": 16, \"limit\": 500, \"limited\": false}"
+

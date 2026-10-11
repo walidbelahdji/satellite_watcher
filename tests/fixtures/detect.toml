@@ -1,0 +1,22 @@
+[[test]]
+name = "Wrong format"
+path = "../.env"
+status = 415
+result = "{\"detail\": \"Unsupported Media Type\"}"
+
+[[test]]
+name = "Photo without wastes"
+path = "no_waste.png"
+result = "[]"
+
+[[test]]
+name = "Photo with wastes"
+path = "with_wastes.png"
+result = "[{\"conf\": 85, \"x\": 89, \"y\": 306, \"w\": 43, \"h\": 56}, {\"conf\": 76, \"x\": 76, \"y\": 255, \"w\": 47, \"h\": 49}]"
+
+[[test]]
+name = "Photo with wastes and conf"
+path = "with_wastes.png"
+json = "{\"conf\": 60}"
+result = "[{\"conf\": 85, \"x\": 89, \"y\": 306, \"w\": 43, \"h\": 56}, {\"conf\": 76, \"x\": 76, \"y\": 255, \"w\": 47, \"h\": 49}]"
+

@@ -1,10 +1,14 @@
-**\__pycache__
+**/__pycache__
 .ruff_cache
 .github
 .git
+.idea
 README.md
 fly.toml
+demo.fly.toml
+.env
+tests
+benchmarks
 *.pt
-*.toml
 *.png
 *.onnx

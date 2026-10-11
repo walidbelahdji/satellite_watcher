@@ -1,12 +1,26 @@
-FROM python:3.11-slim
-RUN apt-get -y update && apt-get -y install curl
-WORKDIR /code
-COPY requirements/prod.txt requirements.txt
-COPY requirements/common.txt common.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt -r common.txt 
-# Download latest model
-ADD https://spring-ai-datasets.s3.eu-west-3.amazonaws.com/model.onnx model.onnx
-COPY /src .
-# nosemgrep
-HEALTHCHECK --interval=10s --timeout=10s --start-period=3s --retries=3 CMD curl -f http://localhost:8080/health
-CMD ["uvicorn", "serve:app", "--host", "0.0.0.0", "--port", "8080"]
+ARG PYTHON_VERSION=3.11-slim
+FROM python:${PYTHON_VERSION}
+ARG API_PORT=8080
+
+WORKDIR /app
+
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+COPY pyproject.toml ./
+COPY src/ ./src/
+RUN pip install --no-cache-dir .
+
+# Runtime defaults and model source are maintained outside the image recipe.
+COPY config/server.env .env
+COPY config/server.env config/server.env
+COPY config/model.env config/model.env
+COPY scripts/download_model.py scripts/download_model.py
+RUN python scripts/download_model.py --config config/model.env
+
+COPY docker/healthcheck.py docker/healthcheck.py
+EXPOSE ${API_PORT}
+HEALTHCHECK --interval=10s --timeout=10s --start-period=3s --retries=3 \
+    CMD ["python", "docker/healthcheck.py"]
+
+CMD ["python", "-m", "detectorLitter"]
