@@ -1,4 +1,4 @@
-app = "detectorlitter-demo"
+app = "bmwalide"
 primary_region = "cdg"
 
 [build]
@@ -15,4 +15,4 @@ processes = ["app"]
 [env]
 TILE_ENDPOINT="https://wxs.ign.fr/ortho/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
 DEMO_TILE_ATTRIBUTION='<a target="_blank" href="https://www.geoportail.gouv.fr/">Geoportail France</a>'
-DEMO_ENDPOINT = "https://detectorlitter.fly.dev"
+DEMO_ENDPOINT = "https://bmwalide-api.fly.dev"

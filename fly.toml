@@ -1,4 +1,4 @@
-app = "detectorlitter"
+app = "bmwalide-api"
 primary_region = "cdg"
 
 [http_service]

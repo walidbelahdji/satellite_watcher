@@ -4,8 +4,8 @@
 areas. It runs a YOLOv8 model in ONNX format, accepts satellite imagery from a
 configurable tile provider, and includes a Streamlit web demo.
 
-The experimental API is available at [detectorlitter.fly.dev](https://detectorlitter.fly.dev),
-with a [web demo](https://detectorlitter-demo.fly.dev).
+The experimental API is available at [bmwalide-api.fly.dev](https://bmwalide-api.fly.dev),
+with a [web demo](https://bmwalide.fly.dev).
 
 ## What it does
 
@@ -23,9 +23,9 @@ with a [web demo](https://detectorlitter-demo.fly.dev).
 The API uses FastAPI. Interactive and machine-readable documentation is
 available at:
 
-- Swagger UI: [`/docs`](https://detectorlitter.fly.dev/docs)
-- ReDoc: [`/redoc`](https://detectorlitter.fly.dev/redoc)
-- OpenAPI schema: [`/openapi.json`](https://detectorlitter.fly.dev/openapi.json)
+- Swagger UI: [`/docs`](https://bmwalide-api.fly.dev/docs)
+- ReDoc: [`/redoc`](https://bmwalide-api.fly.dev/redoc)
+- OpenAPI schema: [`/openapi.json`](https://bmwalide-api.fly.dev/openapi.json)
 
 | Method and path | Input | Result |
 | --- | --- | --- |
