@@ -20,14 +20,19 @@ def http_error(response: requests.Response) -> bool:
     return False
 
 
-def confidence_slider() -> int:
+def confidence_slider(key: str | None = None) -> int:
+    slider_args = {"value": settings.default_confidence}
+    if key is not None:
+        slider_args["key"] = key
+        if key in st.session_state:
+            slider_args.pop("value")
     return st.slider(
         label="Confidence threshold",
         min_value=0,
         max_value=100,
-        value=settings.default_confidence,
         help=(
             "AI models detect objects with a confidence score. A higher score "
             "reduces false positives."
         ),
+        **slider_args,
     )

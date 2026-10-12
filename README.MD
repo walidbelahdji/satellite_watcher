@@ -4,8 +4,6 @@
 areas. It runs a YOLOv8 model in ONNX format, accepts satellite imagery from a
 configurable tile provider, and includes a Streamlit web demo.
 
-The experimental API is available at [bmwalide-api.fly.dev](https://bmwalide-api.fly.dev),
-with a [web demo](https://bmwalide.fly.dev).
 
 ## What it does
 
@@ -14,7 +12,7 @@ with a [web demo](https://bmwalide.fly.dev).
 - Searches a geographic rectangle by fetching and analyzing satellite map tiles,
   then returns detected positions as latitude and longitude.
 - Provides a browser demo for uploading or taking photos and for choosing a
-  search area on a map or by entering GPS coordinates.
+  search area using GPS coordinates or a Google satellite map.
 - Exposes Prometheus metrics and includes Docker Compose, HTTP integration
   fixtures, and a Locust benchmark.
 
@@ -131,6 +129,14 @@ Useful settings include `TILE_ENDPOINT`, `TILE_ZOOM`, `MAX_SEARCH_TILES`,
 `DEMO_*` variables configure the demo listener, API endpoint, map display, and
 default confidence. `.env.example` provides a full set of starting values; for
 example, its search limit is 500 tiles, while the tracked API default is 50.
+
+Set `GOOGLE_MAPS_API_KEY` to enable the interactive Google satellite picker in
+the demo. The key is sent to the browser, so restrict it to the Maps JavaScript
+API and the domains that host the demo. Google Maps requires an API key and
+billing for regular use. Without a key, coordinate entry still works and the
+demo provides a link to browse the selected point in Google Maps.
+The Google map is used to select the search location; image analysis uses the
+API's configured `TILE_ENDPOINT` source.
 
 To use another model source or destination, change `MODEL_URL` or `MODEL_PATH`
 and run `just model`. The download helper also accepts `--config` and `--output`

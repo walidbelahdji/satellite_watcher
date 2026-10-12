@@ -1,6 +1,7 @@
 """Image upload and litter-detection result display."""
 
 from io import BytesIO
+from pathlib import Path
 
 import requests
 import streamlit as st
@@ -10,6 +11,13 @@ from detectorLitter.demo.common import confidence_slider, http_error, settings
 
 
 IMAGE_TYPES = ("jpg", "jpeg", "png", "webp")
+EXAMPLE_IMAGE_PATH = Path(__file__).parent / "assets" / "litter_detection_example.png"
+EXAMPLE_IMAGE_NAME = "litter_detection_example.png"
+
+
+def _select_example_image() -> None:
+    """Select the bundled example in the image-source radio."""
+    st.session_state["image_source"] = "Use the example image"
 
 
 def _annotate(image: Image.Image, detections: list[dict]) -> Image.Image:
@@ -58,25 +66,56 @@ def _annotate(image: Image.Image, detections: list[dict]) -> Image.Image:
 def render() -> None:
     """Render a single-image upload flow and its detection results."""
     with st.container(border=True):
-        uploaded_file = st.file_uploader(
-            "Browse or drag an image here",
-            type=IMAGE_TYPES,
-            accept_multiple_files=False,
-            help="Supported formats: JPG, JPEG, PNG, and WEBP.",
+        st.markdown("#### Choose an image")
+        image_source = st.radio(
+            "Image source",
+            ("Upload a photo", "Use the example image"),
+            horizontal=True,
+            label_visibility="collapsed",
+            key="image_source",
         )
-        st.caption("JPG / PNG / WEBP  |  One image per detection")
 
-        if uploaded_file is None:
-            st.markdown(
-                '<div class="empty-note">Choose a clear image of a public space, '
-                "then run detection to see possible litter highlighted with boxes "
-                "and confidence scores.</div>",
-                unsafe_allow_html=True,
+        if image_source == "Use the example image":
+            image_data = EXAMPLE_IMAGE_PATH.read_bytes()
+            image_name = EXAMPLE_IMAGE_NAME
+            image_type = "image/png"
+        else:
+            uploaded_file = st.file_uploader(
+                "Browse or drag an image here",
+                type=IMAGE_TYPES,
+                accept_multiple_files=False,
+                help="Supported formats: JPG, JPEG, PNG, and WEBP.",
             )
-            return
+            st.caption("JPG / PNG / WEBP  |  One image per detection")
+
+            if uploaded_file is None:
+                note_column, example_column = st.columns([1, 0.9], gap="large")
+                with note_column:
+                    st.markdown(
+                        '<div class="empty-note">Upload a photo, or select '
+                        "Use the example image above to try the detector. "
+                        "Results include highlighted boxes and confidence scores.</div>",
+                        unsafe_allow_html=True,
+                    )
+                with example_column:
+                    st.image(
+                        EXAMPLE_IMAGE_PATH,
+                        caption="Example image",
+                        use_container_width=True,
+                    )
+                    st.button(
+                        "Use this example",
+                        on_click=_select_example_image,
+                        use_container_width=True,
+                    )
+                return
+
+            image_data = uploaded_file.getvalue()
+            image_name = uploaded_file.name
+            image_type = uploaded_file.type or "application/octet-stream"
 
         try:
-            image = Image.open(BytesIO(uploaded_file.getvalue())).convert("RGB")
+            image = Image.open(BytesIO(image_data)).convert("RGB")
         except (UnidentifiedImageError, OSError):
             st.error("This file could not be opened as an image. Choose a JPG, PNG, or WEBP file.")
             return
@@ -85,7 +124,7 @@ def render() -> None:
         with image_column:
             st.image(
                 image,
-                caption=f"Ready to scan - {uploaded_file.name}",
+                caption=f"Ready to scan - {image_name}",
                 use_container_width=True,
             )
         with control_column:
@@ -109,9 +148,9 @@ def render() -> None:
                     f"{settings.endpoint.rstrip('/')}/detect",
                     files={
                         "data": (
-                            uploaded_file.name,
-                            uploaded_file.getvalue(),
-                            uploaded_file.type or "application/octet-stream",
+                            image_name,
+                            image_data,
+                            image_type,
                         )
                     },
                     data={"conf": confidence},
@@ -143,7 +182,7 @@ def render() -> None:
                 "No litter was detected at this confidence threshold. Try a clearer "
                 "or closer image, or lower the threshold and scan again."
             )
-            st.image(image, caption="Uploaded image", use_container_width=True)
+            st.image(image, caption="Selected image", use_container_width=True)
             return
 
         average_confidence = round(
