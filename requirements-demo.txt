@@ -1,0 +1,4 @@
+# Streamlit demo UI
+streamlit
+# Image display and annotation
+Pillow

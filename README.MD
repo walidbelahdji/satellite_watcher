@@ -184,3 +184,8 @@ image-detection endpoints and writes `bench.html`.
 The repository includes Fly.io configuration for the API (`fly.toml`) and demo
 (`demo.fly.toml`). With the Fly CLI configured, use `just deploy` for the API,
 `just deploy-demo` for the demo, or `just deploy-all` for both.
+
+The API configuration keeps at least one machine running in its primary region
+to avoid cold starts. This means that machine continues to incur running
+compute charges while the app is idle. To apply configuration changes, redeploy
+the API with `fly deploy --config fly.toml --app bmwalide-api`.

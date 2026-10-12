@@ -1,7 +1,17 @@
 # YOLOv8 model
 ultralytics
+# ONNX model runtime (CPU)
+onnxruntime
 # OpenCV
 opencv-python-headless
+# API metrics
+prometheus-client
+# Geographic projections
+pyproj
+# Direct application imports
+numpy
+requests
+python-dotenv
 # Web framework
 fastapi[all]
 # Python formatter

@@ -4,8 +4,8 @@ ARG DEMO_PORT=8501
 
 WORKDIR /app
 
-COPY requirements.txt ./
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+COPY requirements.txt requirements-demo.txt ./
+RUN pip install --no-cache-dir --upgrade -r requirements.txt -r requirements-demo.txt
 
 COPY pyproject.toml ./
 COPY src/ ./src/
