@@ -4,6 +4,8 @@
 areas. It runs a YOLOv8 model in ONNX format, accepts satellite imagery from a
 configurable tile provider, and includes a Streamlit web demo.
 
+The experimental API is available at [bmwalide-api.fly.dev](https://bmwalide-api.fly.dev),
+with a [web demo](https://bmwalide.fly.dev).
 
 ## What it does
 
@@ -11,8 +13,9 @@ configurable tile provider, and includes a Streamlit web demo.
   boxes.
 - Searches a geographic rectangle by fetching and analyzing satellite map tiles,
   then returns detected positions as latitude and longitude.
-- Provides a browser demo for uploading or taking photos and for choosing a
-  search area using GPS coordinates or a Google satellite map.
+- Provides a browser demo with a photo tab and a map tab. The map shows IGN
+  Géoportail orthophotos. Draw a rectangle or enter GPS coordinates, check the
+  tile count, then search that area.
 - Exposes Prometheus metrics and includes Docker Compose, HTTP integration
   fixtures, and a Locust benchmark.
 
@@ -35,8 +38,10 @@ available at:
 Search coordinates use WGS 84. The service converts the requested rectangle to
 Web Mercator tile coordinates, requests tiles from `TILE_ENDPOINT`, and limits
 the number of tiles analyzed with `MAX_SEARCH_TILES`. The tile URL must include
-the `{z}`, `{x}`, and `{y}` placeholders. Invalid image data returns HTTP 415;
-invalid request fields are validated by FastAPI.
+the `{z}`, `{x}`, and `{y}` placeholders. The default endpoint is the free IGN
+Géoplateforme orthophoto service at `data.geopf.fr` (layer
+`ORTHOIMAGERY.ORTHOPHOTOS`). Invalid image data returns HTTP 415; invalid
+request fields are validated by FastAPI.
 
 The Prometheus exporter is served at `/metrics` when `METRICS_ENABLED` is true.
 
@@ -93,6 +98,12 @@ The demo listens on `DEMO_HOST` and `DEMO_PORT` (defaults: `0.0.0.0` and
 `8501`). To have it use the API running locally, set `DEMO_ENDPOINT` to
 `http://localhost:8080` in `.env` before starting it.
 
+The demo has two tabs. **Photo** uploads an image and calls `/detect`. **Map**
+loads `TILE_ENDPOINT` (IGN Géoportail orthophotos by default) and calls
+`/search_info`, then `/search`, for the rectangle you draw or type. The view
+opens at `DEMO_DEFAULT_LAT` and `DEMO_DEFAULT_LNG`. A search larger than
+`MAX_SEARCH_TILES` stays disabled.
+
 ## Run with Docker Compose
 
 ```sh
@@ -101,9 +112,11 @@ just compose
 
 This builds and starts the API, the demo profile, and a local static tile
 server. By default, the host ports are `8000` for the API, `8501` for the demo,
-and `8502` for the tile server. Compose configures the API to use the local tile
-server and the demo to use the API. To start without the demo profile, run
-`docker compose up --build`.
+and `8502` for the tile server. Compose points the demo at the API, and points
+both the map and the API at the public IGN orthophoto service so the browser
+can load imagery and the API can analyze the same tiles. The tile server only
+publishes `tests/data/tiles` for offline fixtures. To start without the demo
+profile, run `docker compose up --build`.
 
 The published ports and the Python base image can be changed with
 `API_PUBLISHED_PORT`, `DEMO_PUBLISHED_PORT`, `MAP_PUBLISHED_PORT`, and
@@ -120,7 +133,7 @@ override defaults for local work.
 - `config/demo.env` sets demo, map, tile display, and default confidence values.
 - `config/model.env` supplies the ONNX model URL and download timeout.
 - `config/compose-server.env` and `config/compose-demo.env` point Compose
-  services at each other and the local tile server.
+  services at each other and at the public orthophoto service.
 
 Useful settings include `TILE_ENDPOINT`, `TILE_ZOOM`, `MAX_SEARCH_TILES`,
 `MODEL_PATH`, `API_HOST`, `API_PORT`, `METRICS_ENABLED`, `METRICS_HOST`,
@@ -129,14 +142,6 @@ Useful settings include `TILE_ENDPOINT`, `TILE_ZOOM`, `MAX_SEARCH_TILES`,
 `DEMO_*` variables configure the demo listener, API endpoint, map display, and
 default confidence. `.env.example` provides a full set of starting values; for
 example, its search limit is 500 tiles, while the tracked API default is 50.
-
-Set `GOOGLE_MAPS_API_KEY` to enable the interactive Google satellite picker in
-the demo. The key is sent to the browser, so restrict it to the Maps JavaScript
-API and the domains that host the demo. Google Maps requires an API key and
-billing for regular use. Without a key, coordinate entry still works and the
-demo provides a link to browse the selected point in Google Maps.
-The Google map is used to select the search location; image analysis uses the
-API's configured `TILE_ENDPOINT` source.
 
 To use another model source or destination, change `MODEL_URL` or `MODEL_PATH`
 and run `just model`. The download helper also accepts `--config` and `--output`

@@ -1,6 +1,7 @@
 name: satellite-watcher
 
 services:
+  # Offline fixture tiles only. The demo map and the API use TILE_ENDPOINT.
   map:
     image: joseluisq/static-web-server
     read_only: true

@@ -1,4 +1,7 @@
 # Streamlit demo UI
 streamlit
+# Slippy map for geographic search
+folium
+streamlit-folium
 # Image display and annotation
 Pillow

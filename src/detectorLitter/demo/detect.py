@@ -9,7 +9,6 @@ from PIL import Image, ImageDraw, ImageFont, UnidentifiedImageError
 
 from detectorLitter.demo.common import confidence_slider, http_error, settings
 
-
 IMAGE_TYPES = ("jpg", "jpeg", "png", "webp")
 EXAMPLE_IMAGE_PATH = Path(__file__).parent / "assets" / "litter_detection_example.png"
 EXAMPLE_IMAGE_NAME = "litter_detection_example.png"
@@ -117,7 +116,9 @@ def render() -> None:
         try:
             image = Image.open(BytesIO(image_data)).convert("RGB")
         except (UnidentifiedImageError, OSError):
-            st.error("This file could not be opened as an image. Choose a JPG, PNG, or WEBP file.")
+            st.error(
+                "This file could not be opened as an image. Choose a JPG, PNG, or WEBP file."
+            )
             return
 
         image_column, control_column = st.columns([1.35, 0.85], gap="large")
@@ -132,7 +133,7 @@ def render() -> None:
             st.write(
                 "Set the minimum confidence for detections included in the results."
             )
-            confidence = confidence_slider()
+            confidence = confidence_slider("photo_confidence")
             run_detection = st.button(
                 "Detect litter",
                 type="primary",
@@ -168,7 +169,9 @@ def render() -> None:
         try:
             detections = response.json()
         except ValueError:
-            st.error("The detection service returned an unreadable response. Please try again.")
+            st.error(
+                "The detection service returned an unreadable response. Please try again."
+            )
             return
 
         st.markdown(

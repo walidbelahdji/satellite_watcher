@@ -13,4 +13,4 @@ where = ["src"]
 include = ["detectorLitter*"]
 
 [tool.setuptools.package-data]
-"detectorLitter.demo" = ["assets/*.png", "map_component/*.html"]
+"detectorLitter.demo" = ["assets/*.png"]

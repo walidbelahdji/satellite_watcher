@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from detectorLitter.demo import detect, geo_search
+from detectorLitter.demo import detect, search
 
 st.set_page_config(
     page_title="Litter Detector",
@@ -172,8 +172,9 @@ with hero:
             <div class="hero-kicker">Cleaner places start with a closer look</div>
             <h1>Litter Detector</h1>
             <p class="hero-copy">
-                Analyze a photo or choose a street area by GPS. The detector
-                highlights likely litter and reports locations you can review.
+                Upload a photo of a street, park, or outdoor space, or search a
+                neighborhood on IGN aerial imagery. The detector highlights
+                likely litter so you can review the results at a glance.
             </p>
         </section>
         """,
@@ -186,8 +187,8 @@ with guide:
             <div class="workflow-kicker">A simple three-step check</div>
             <div class="workflow-row">
                 <span class="workflow-number">01</span>
-                <div><div class="workflow-title">Choose a photo or area</div>
-                <div class="workflow-copy">Upload an image or select a GPS location.</div></div>
+                <div><div class="workflow-title">Choose a photo</div>
+                <div class="workflow-copy">Upload one image or select the example.</div></div>
             </div>
             <div class="workflow-row">
                 <span class="workflow-number">02</span>
@@ -204,30 +205,25 @@ with guide:
         unsafe_allow_html=True,
     )
 
-st.markdown(
-    """
-    <div class="section-heading">
-        <div class="section-kicker">Detection tools</div>
-        <h2>Choose what to scan</h2>
-        <p class="section-copy">Analyze one photo or search an area using GPS coordinates.</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+map_tab, photo_tab = st.tabs(["Map", "Photo"])
 
-mode = st.radio(
-    "Detection mode",
-    ("Photo detection", "GPS area scan"),
-    horizontal=True,
-    label_visibility="collapsed",
-    key="detection_mode",
-)
-if mode == "Photo detection":
+with map_tab:
+    search.render()
+
+with photo_tab:
+    st.markdown(
+        """
+        <div class="section-heading">
+            <div class="section-kicker">Image analysis</div>
+            <h2>Detect litter in a photo</h2>
+            <p class="section-copy">Choose a single image to begin. No camera access is needed.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     detect.render()
-else:
-    geo_search.render()
 
 st.markdown(
-    '<div class="footer-note">Litter Detector | Photo and GPS-based detection for cleaner shared spaces</div>',
+    '<div class="footer-note">Litter Detector | Image-based detection for cleaner shared spaces</div>',
     unsafe_allow_html=True,
 )

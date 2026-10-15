@@ -104,7 +104,6 @@ class DemoConfig:
     def __init__(self, report: bool = True):
         self.tile_endpoint = url("TILE_ENDPOINT")
         self.endpoint = url("DEMO_ENDPOINT")
-        self.google_maps_api_key = os.getenv("GOOGLE_MAPS_API_KEY", "").strip()
         self.attribution = expect("DEMO_TILE_ATTRIBUTION")
         self.default_lat = number("DEMO_DEFAULT_LAT")
         self.default_lng = number("DEMO_DEFAULT_LNG")

@@ -1,6 +1,6 @@
 # Install or update project dependencies
 dep:
-    python3 -m pip install --upgrade -r requirements.txt
+    python3 -m pip install --upgrade -r requirements.txt -r requirements-demo.txt
     python3 -m pip install --editable .
 
 # Download the configured model artifact

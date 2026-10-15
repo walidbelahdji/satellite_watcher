@@ -1,6 +1,4 @@
-# YOLOv8 model
-ultralytics
-# ONNX model runtime (CPU)
+# YOLOv8 ONNX model runtime (CPU)
 onnxruntime
 # OpenCV
 opencv-python-headless

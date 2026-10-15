@@ -24,6 +24,6 @@ path = "/metrics"
 memory = "1gb"
 
 [env]
-TILE_ENDPOINT = "https://wxs.ign.fr/ortho/geoportail/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
+TILE_ENDPOINT = "https://data.geopf.fr/wmts?layer=ORTHOIMAGERY.ORTHOPHOTOS&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/jpeg&TileMatrix={z}&TileCol={x}&TileRow={y}"
 TILE_ZOOM = "18"
 MAX_SEARCH_TILES = "50"
